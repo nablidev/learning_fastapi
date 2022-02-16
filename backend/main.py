@@ -2,14 +2,27 @@
 import uvicorn
 from fastapi import FastAPI
 from core.config import settings
+from apis.general_pages.route_homepage import general_pages_router
 
-app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
+
+def include_router(app):
+	app.include_router(general_pages_router)
 
 
-@app.get("/")
-def hello_api():
-    return {"msg": "Hello API"}
+def start_application():
+	app = FastAPI(title=settings.PROJECT_NAME,version=settings.PROJECT_VERSION)
+	include_router(app)
+	return app
+
+
+app = start_application()
+
+
+# @app.get("/") #remove this, It is no longer needed.
+# def hello_api():
+#     return {"msg":"Hello API"}
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8001)
+
+	uvicorn.run(app, host="127.0.0.1", port=8001)
